@@ -1,0 +1,43 @@
+#include "winres.h"
+
+LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
+
+// ============================================================================
+// VERSION INFO
+//
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION VER_MAJOR,VER_MINOR,VER_PATCH,VER_BUILD
+ PRODUCTVERSION VER_MAJOR,VER_MINOR,VER_PATCH,VER_BUILD
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "000004b0"
+        BEGIN
+#ifdef _DEBUG
+            VALUE "Comments", "DEBUG"
+#endif
+            VALUE "CompanyName", "Bitcraftr"
+            VALUE "FileDescription", "Undisclosed Game"
+            VALUE "FileVersion", "0.1.0.0"
+            VALUE "InternalName", "game.exe"
+            VALUE "LegalCopyright", "Copyright (C) 2016 Bitcraftr"
+            VALUE "OriginalFilename", "game.exe"
+            VALUE "ProductName", "Undisclosed Game"
+            VALUE "ProductVersion", "0.1.0.0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x0, 1200
+    END
+END
+

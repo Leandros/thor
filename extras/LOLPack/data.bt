@@ -1,0 +1,38 @@
+//------------------------------------------------
+//--- 010 Editor v7.0.2 Binary Template
+//
+//      File: data.bt
+//   Authors: Arvid Gerstmann
+//   Version: v1.0.0
+//   Purpose:
+//  Category: LOLPack
+// File Mask: *.dat
+//  ID Bytes: 44 41 54 // DAT
+//   History:
+//------------------------------------------------
+LittleEndian();
+typedef uchar   u8;
+typedef uint    u32;
+typedef uint64  u64;
+
+typedef struct {
+    u8 threecc[3];
+    u8 flags <format=hex>;
+    u32 length <format=hex>;
+} HEADER <bgcolor=cLtBlue>;
+
+typedef struct {
+    SetBackColor(cRed);
+    u32 size <format=hex>;
+    SetBackColor(cNone);
+    u8 data[size];
+} ENTRY;
+
+
+// ============================================================================
+// Data
+//
+HEADER header;
+while (!FEof())
+    ENTRY entry;
+

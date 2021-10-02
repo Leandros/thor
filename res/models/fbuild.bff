@@ -1,0 +1,56 @@
+; =============================================================================
+; Models
+; =============================================================================
+#once
+
+; =============================================================================
+; .obj binary conversion
+.BOBCompiler    = './extras/bin/win64/bob.exe'
+.BOBOptions     = '"%1" "%2"'
+
+; =============================================================================
+; Plain copying
+
+; We need to make sure 'Read Only' is not preserved, otherwise clean might fail
+.CopyExec       = 'C:\Windows\System32\xcopy.exe'
+.CopyOptions    = '/Q /Y /R /I "%1" "%2*"'
+
+; The copying is done via cp.exe, due to the fact that the 'CopyDir' node can
+; not be used as a PreBuildDependency for another 'Exec' node.
+; We might replace, in the future, cp.exe with another compiler, since
+; .obj/.fbx might require some pre-processing on it's own.
+ObjectList('res-models-obj')
+{
+    .Compiler                   = .BOBCompiler
+    .CompilerOptions            = .BOBOptions
+
+    .CompilerOutputPath         = './_build/res/models'
+    .CompilerOutputExtension    = '.bob'
+
+    .CompilerInputPath          = './res/models'
+    .CompilerInputPattern       = '*.obj'
+
+    .PreBuildDependencies       = {
+        'objbin'
+    }
+}
+
+ObjectList('res-models-fbx')
+{
+    .Compiler                   = .CopyExec
+    .CompilerOptions            = .CopyOptions
+
+    .CompilerOutputPath         = './_build/res/models'
+    .CompilerOutputExtension    = '.fbx'
+
+    .CompilerInputPath          = './res/models'
+    .CompilerInputPattern       = '*.fbx'
+}
+
+Alias('res-models')
+{
+    .Targets            = {
+        'res-models-obj'
+    }
+}
+

@@ -1,0 +1,66 @@
+; =============================================================================
+; Engine
+; =============================================================================
+
+ObjectList('engine-c')
+{
+    .CompilerOptions            + ' /D__ENGINE_STATIC__=+'
+                                + ' /D__BUILDING_DLL__=+'
+                                + .EngineConf
+
+    .CompilerOutputPath         = './_build/src/engine'
+    .CompilerOutputExtension    = '.o'
+
+    .CompilerInputPath          = './src/engine'
+    .CompilerInputPattern       = '*.c'
+
+    ; Exclude all NON Windows files
+    .CompilerInputExcludePath   = {
+        './src/engine/sys/linux'
+        './src/engine/sys/darwin'
+        './src/engine/gfx/linux'
+        './src/engine/gfx/darwin'
+        './src/engine/gfx/ogl'
+        './src/engine/gfx/vk'
+        './src/engine/libc'
+    }
+}
+
+ObjectList('engine-asm')
+{
+    .Compiler                   = .YASM
+    .CompilerOptions            = .YASMOptions
+
+    .CompilerOutputPath         = './_build/src/engine'
+    .CompilerOutputExtension    = '.o'
+
+    .CompilerInputPath          = './src/engine'
+    .CompilerInputPattern       = '*.s'
+
+    ; Exclude all NON Windows files
+    .CompilerInputExcludePath   = {
+        './src/engine/sys/linux'
+        './src/engine/sys/darwin'
+        './src/engine/gfx/linux'
+        './src/engine/gfx/darwin'
+        './src/engine/gfx/ogl'
+        './src/engine/gfx/vk'
+    }
+}
+
+Library('engine')
+{
+    .CompilerOutputPath         = './_build/src/lib'
+
+    .LibrarianOutput            = './_out/bin/engine.lib'
+    .LibrarianAdditionalInputs  = { 'engine-c', 'engine-asm', 'libc' }
+
+    .LibrarianOptions           + ' kernel32.lib'
+                                + ' user32.lib'
+                                + ' gdi32.lib'
+                                + ' version.lib'
+                                + ' D3D11.lib'
+                                + ' dxguid.lib'
+                                + ' imm32.lib'
+}
+

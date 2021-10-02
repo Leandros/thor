@@ -1,0 +1,78 @@
+; =============================================================================
+; Game
+; =============================================================================
+
+ObjectList('game-exe-c')
+{
+    .CompilerOptions            + ' /D__ENGINE_STATIC__=+'
+                                + ' /D__BUILDING_DLL__=-'
+                                + .EngineConf
+
+    .CompilerOutputPath         = './_build/src/game/exe'
+    .CompilerOutputExtension    = '.o'
+
+    .CompilerInputPath          = './src/game/exe'
+    .CompilerInputPattern       = '*.c'
+}
+
+ObjectList('game-dll-c')
+{
+    .CompilerOptions            + ' /D__ENGINE_STATIC__=+'
+                                + ' /D__BUILDING_DLL__=-'
+                                + .EngineConf
+
+    .CompilerOutputPath         = './_build/src/game/dll'
+    .CompilerOutputExtension    = '.o'
+
+    .CompilerInputPath          = './src/game/dll'
+    .CompilerInputPattern       = '*.c'
+
+    ; Make sure 'res' is up2date before generating .dll for hotreload.
+    .PreBuildDependencies       = 'res'
+}
+
+ObjectList('game-res')
+{
+    .Compiler                   = .RC
+    .CompilerOptions            = .RCOptions
+
+    .CompilerOutputPath         = './_build/src/game'
+    .CompilerOutputExtension    = '.res'
+
+    .CompilerInputPath          = './src/game'
+    .CompilerInputPattern       = '*.rc'
+}
+
+DLL('game-dll')
+{
+    .LinkerOutput               = './_out/bin/$OutputGameDll$.dll'
+    .Libraries                  = { 'game-dll-c', 'engine' }
+    .CompilerOptions            + ' /DLL'
+    .LinkerOptions              + ' /DLL'
+                                + ' /SUBSYSTEM:WINDOWS'
+                                + ' /ENTRY:_DllMain'
+                                + ' /EXPORT:get_api'
+                                + ' /PDBALTPATH:$PDBAltPath$'
+                                + ' kernel32.lib'
+                                + ' user32.lib'
+                                + ' gdi32.lib'
+                                + ' version.lib'
+                                + ' D3D11.lib'
+                                + ' dxguid.lib'
+                                + ' ws2_32.lib'
+                                + ' imm32.lib'
+                                + '$LibLinkerFlags$'
+}
+
+Executable('game-exe')
+{
+    .LinkerOutput               = './_out/bin/$OutputGameExe$.exe'
+    .Libraries                  = { 'game-exe-c', 'game-res' }
+    .LinkerOptions              + ' /SUBSYSTEM:WINDOWS'
+                                + ' /ENTRY:WinMain'
+                                + ' kernel32.lib'
+                                + ' user32.lib'
+                                + ' gdi32.lib'
+                                + ' dbghelp.lib'
+}
+

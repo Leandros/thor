@@ -1,0 +1,53 @@
+; =============================================================================
+; LOLPack
+; =============================================================================
+
+ObjectList('lolpack-leg')
+{
+    .Compiler                   = .Leg
+    .CompilerOptions            = .LegOptions
+
+    .CompilerOutputPath         = './_build/src/tools/lolpack'
+    .CompilerOutputExtension    = '.c'
+
+    .CompilerInputPath          = './src/tools/lolpack'
+    .CompilerInputPattern       = '*.leg'
+}
+
+ObjectList('lolpack-exe')
+{
+    .CompilerOptions            + ' /D__ENGINE_STATIC__=+'
+                                + ' /D__BUILDING_DLL__=-'
+                                + .EngineConf
+
+    .CompilerOutputPath         = './_build/src/tools/lolpack'
+    .CompilerOutputExtension    = '.o'
+
+    .CompilerInputPath          = {
+        './src/tools/lolpack'
+        './_build/src/tools/lolpack'
+    }
+    .CompilerInputPattern       = '*.c'
+
+    .PreBuildDependencies       = {
+        'lolpack-leg'
+    }
+}
+
+Executable('lolpack')
+{
+    .LinkerOutput               = './_out/bin/lolpack.exe'
+    .Libraries                  = { 'lolpack-exe', 'engine' }
+    .LinkerOptions              + ' /SUBSYSTEM:WINDOWS'
+                                + ' /ENTRY:WinMain'
+                                + ' kernel32.lib'
+                                + ' User32.lib'
+                                + ' Dbghelp.lib'
+                                + ' Psapi.lib'
+                                + ' ws2_32.lib'
+                                + ' dxguid.lib'
+                                + '$LibLinkerFlags$'
+}
+
+
+

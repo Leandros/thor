@@ -1,0 +1,38 @@
+//------------------------------------------------
+//--- 010 Editor v7.0.2 Binary Template
+//
+//      File: changelist.bt
+//   Authors: Arvid Gerstmann
+//   Version: v1.0.0
+//   Purpose:
+//  Category: LOLPack
+// File Mask: *.lst
+//  ID Bytes: 4c 53 54 // LST
+//   History:
+//------------------------------------------------
+LittleEndian();
+typedef uchar   u8;
+typedef uint    u32;
+typedef uint64  u64;
+
+typedef struct {
+    u8 threecc[3];
+    u8 version;
+    u32 length;
+} HEADER <bgcolor=cLtBlue>;
+
+typedef struct {
+    BigEndian();
+    u64 hash <format=hex>;
+    LittleEndian();
+    u64 date;
+} ENTRY;
+
+
+// ============================================================================
+// Data
+//
+HEADER header;
+while(!FEof())
+    ENTRY entry;
+

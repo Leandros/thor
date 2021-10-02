@@ -1,0 +1,103 @@
+//------------------------------------------------
+//--- 010 Editor v7.0.2 Binary Template
+//
+//      File: dds.bt
+//   Authors: Arvid Gerstmann
+//   Version: v1.0.0
+//   Purpose:
+//  Category: GFX
+// File Mask: *.dds
+//  ID Bytes: 44 44 53 20 // DDS
+//   History:
+//------------------------------------------------
+LittleEndian();
+typedef uchar   BYTE;
+typedef uint    DWORD;
+typedef uint    UINT;
+
+// ============================================================================
+// Helper Functions
+//
+int MAX(int a, int b)
+{
+    return a > b ? a : b;
+}
+
+int dxt_size(int block, int width, int height)
+{
+    width = MAX(1, ((width + 3) / 4));
+    height = MAX(1, ((height + 3) / 4));
+    return width * height * block;
+}
+
+#define FMT_DX10                (0x30315844)
+#define FMT_DXT1                (0x31545844)
+#define FMT_DXT3                (0x33545844)
+#define FMT_DXT5                (0x35545844)
+
+typedef struct {
+    DWORD dwSize;
+    DWORD dwFlags;
+    DWORD dwFourCC;
+    DWORD dwRGBBitCount;
+    DWORD dwRBitMask;
+    DWORD dwGBitMask;
+    DWORD dwBBitMask;
+    DWORD dwABitMask;
+} DDS_PIXELFORMAT;
+
+typedef struct {
+    DWORD dwSize;
+    DWORD dwHeaderFlags;
+    DWORD dwHeight;
+    DWORD dwWidth;
+    DWORD dwPitchOrLinearSize;
+    DWORD dwDepth;
+    DWORD dwMipMapCount;
+    DWORD dwReserved1[11];
+    DDS_PIXELFORMAT ddspf;
+    DWORD dwSurfaceFlags;
+    DWORD dwCubemapFlags;
+    DWORD dwReserved2[3];
+} DDS_HEADER <bgcolor=cLtBlue>;
+
+typedef struct {
+    DWORD dxgiFormat;
+    DWORD resourceDimension;
+    UINT miscFlag;
+    UINT arraySize;
+    UINT reserved;
+} DDS_HEADER_DXT10;
+
+typedef struct (int size) {
+    BYTE mip[size];
+} MIPLEVEL;
+
+
+// ============================================================================
+// Data
+//
+DWORD dwMagic;
+DDS_HEADER header;
+
+if (header.ddspf.dwFlags == 0x00000004) {
+    local int blocksize;
+    local int i, n, w = header.dwWidth, h = header.dwHeight;
+
+    if (header.ddspf.dwFourCC == FMT_DX10)
+        DDS_HEADER_DXT10 header10;
+
+    if (header.ddspf.dwFourCC == FMT_DXT1)
+        blocksize = 8;
+    else if (header.ddspf.dwFourCC == FMT_DXT3)
+        blocksize = 16;
+    else if (header.ddspf.dwFourCC == FMT_DXT5)
+        blocksize = 16;
+
+    MIPLEVEL mip(dxt_size(blocksize, w, h));
+    for (i = 0, n = header.dwMipMapCount - 1; i < n; ++i) {
+        w = w / 2, h = h / 2;
+        MIPLEVEL mip(dxt_size(blocksize, w, h));
+    }
+}
+

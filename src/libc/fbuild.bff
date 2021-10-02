@@ -1,0 +1,41 @@
+; =============================================================================
+; LibC
+; =============================================================================
+
+ObjectList('libc-c')
+{
+    .CompilerOptions            + ' /D__ENGINE_STATIC__=+'
+                                + ' /D__BUILDING_DLL__=+'
+                                + .EngineConf
+
+    .CompilerOutputPath         = './_build/src/libc'
+    .CompilerOutputExtension    = '.o'
+
+    .CompilerInputFiles         = {
+        './src/libc/libc.c'
+    }
+}
+
+ObjectList('libc-asm')
+{
+    .Compiler                   = .YASM
+    .CompilerOptions            = .YASMOptions
+
+    .CompilerOutputPath         = './_build/src/libc'
+    .CompilerOutputExtension    = '.o'
+
+    .CompilerInputPath          = './src/libc'
+    .CompilerInputPattern       = '*.s'
+}
+
+Library('libc')
+{
+    .CompilerOutputPath         = './_build/src/lib'
+
+    .LibrarianOutput            = './_out/bin/c.lib'
+    .LibrarianAdditionalInputs  = { 'libc-c', 'libc-asm' }
+
+    .LibrarianOptions           + ' kernel32.lib'
+                                + ' user32.lib'
+}
+

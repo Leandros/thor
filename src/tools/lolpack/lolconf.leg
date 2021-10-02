@@ -1,0 +1,42 @@
+%{
+#include <stdlib.h>         /* atoi() */
+
+/* Parser Config: */
+#define YY_CTX_LOCAL 1
+#define YY_CTX_MEMBERS                                                      \
+    FILE *_file;                                                            \
+    void *_usrptr;                                                          \
+    void (*version)(struct _yycontext *, int, int, int);                    \
+    void (*file)(struct _yycontext *, char const *);
+#define YY_INPUT(yy, buf, result, max_size)                                 \
+    {                                                                       \
+        result = (int)fread(buf, 1, max_size, yy->_file);                   \
+    }
+
+
+%}
+
+stmt        = - expr+ EOF
+expr        = version EOL
+            | file EOL
+            | - EOL
+
+
+version     = "version" EQUAL
+                v1:NUMBER '.'
+                v2:NUMBER '.'
+                v3:NUMBER           { yy->version(yy, v1, v2, v3); }
+
+file        = DASH STRING           { yy->file(yy, yytext); }
+
+
+NUMBER      = < [0-9]+ > -          { $$ = atoi(yytext); }
+STRING      = '"' < [^\"]* > '"' -
+DASH        = - '-' -
+EQUAL       = - '=' -
+
+-           = [ \t]*
+EOL         = '\n' | '\r\n' | '\r' | ';'
+EOF         = !.
+
+

@@ -1,0 +1,38 @@
+; =============================================================================
+; LOLPack
+; =============================================================================
+#once
+
+Alias('res-prep')
+{
+    .Targets                    = {
+        'res-models'
+        'res-fshader'
+        'res-vshader'
+        'res-cshader'
+        'res-textures-diffuse'
+        'res-textures-normals'
+    }
+}
+
+Exec('res')
+{
+    .ExecExecutable             = './_out/bin/lolpack.exe'
+    ; Specifying a non-existant file will execute this step every time.
+    .ExecInput                  = './_build/this-file-is-not-here'
+    .ExecOutput                 = './_out/logs/lolpack.log'
+
+    .ExecArguments              = ' -v'
+                                + ' -c ./res/lolpack.cfg'
+                                + ' ./_build/res/'
+                                + ' ./_out/data'
+    .ExecWorkingDir             = './'
+    .ExecReturnCode             = 0
+    .ExecUseStdOutAsOutput      = true
+
+    .PreBuildDependencies       = {
+        'res-prep'
+        'lolpack'
+    }
+}
+

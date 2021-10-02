@@ -1,0 +1,84 @@
+LIBRARY libengine
+EXPORTS
+	sys_fiber_switch
+	sys_fiber_restore
+	sys_fiber_save
+	_rotl
+	_rotl64
+
+; string.h
+    memcpy
+    memmove
+    strcpy
+    strncpy
+    memcmp
+    strcmp
+    strncmp
+    memchr
+    strchr
+    strrchr
+    strstr
+    memset
+    strlen
+    strdup
+    strndup
+    strnlen
+
+; stdlib.h
+    abort
+    exit
+    _Exit
+    malloc
+    calloc
+    realloc
+    free
+    strtold
+    strtod
+    strtof
+    strtoll
+    strtol
+    strtoull
+    strtoul
+    atof
+    atoi
+    atol
+    atoll
+
+; stdio.h
+    puts
+    getchar
+    fclose
+    fflush
+    fopen
+    printf
+    fprintf
+    vprintf
+    vfprintf
+    snprintf
+    vsnprintf
+    fread
+    fwrite
+    fseeko
+    ftello
+    rewind
+
+; wchar.h
+    wcslen
+
+; time.h
+    mktime
+    localtime_s
+
+; tls.h
+    __tls_index
+    __get_thread_info
+
+; xxhash
+    XXH64
+    XXH64_createState
+    XXH64_freeState
+    XXH64_reset
+    XXH64_update
+    XXH64_digest
+    XXH64_canonicalFromHash
+    XXH64_hashFromCanonical

@@ -1,0 +1,41 @@
+; =============================================================================
+; Tests
+; =============================================================================
+
+ObjectList('tests-c')
+{
+    .CompilerOptions            + ' /D__ENGINE_STATIC__=+'
+                                + ' /D__BUILDING_DLL__=-'
+                                + .EngineConf
+
+    .CompilerOutputPath         = './_build/tests'
+    .CompilerOutputExtension    = '.o'
+
+    .CompilerInputPath          = './tests'
+    .CompilerInputPattern       = '*.c'
+
+    .CompilerInputExcludedFiles = {
+        "test_scheduler.c"
+    }
+}
+
+Executable('tests')
+{
+    .LinkerOutput               = './_out/bin/tests.exe'
+    .Libraries                  = { 'tests-c', 'engine' }
+    .LinkerOptions              + ' /SUBSYSTEM:WINDOWS'
+                                + ' /ENTRY:WinMain'
+                                + ' kernel32.lib'
+                                + ' ws2_32.lib'
+                                + ' dxguid.lib'
+                                + '$LibLinkerFlags$'
+}
+
+Test('test')
+{
+    .TestExecutable             = './_out/bin/tests.exe'
+    .TestOutput                 = './_out/logs/test.log'
+    .TestArguments              = '--startup-only'
+    .TestWorkingDir             = './_out/bin'
+}
+

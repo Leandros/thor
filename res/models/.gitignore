@@ -1,0 +1,5 @@
+
+# Do not ignore .obj in this directory, they're different files.
+!*.obj
+!*.fbx
+

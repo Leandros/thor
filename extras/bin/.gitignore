@@ -1,0 +1,3 @@
+# Do not ignore .exe's in this folder
+!*.exe
+

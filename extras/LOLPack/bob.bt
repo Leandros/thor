@@ -1,0 +1,69 @@
+//------------------------------------------------
+//--- 010 Editor v7.0.2 Binary Template
+//
+//      File: bob.bt
+//   Authors: Arvid Gerstmann
+//   Version: v1.0.0
+//   Purpose:
+//  Category: LOLPack
+// File Mask: *.bob
+//  ID Bytes: 42 4F 42 // BOB
+//   History:
+//------------------------------------------------
+LittleEndian();
+typedef uchar   u8;
+typedef int     i32;
+typedef uint    u32;
+typedef float   f32;
+
+typedef struct {
+    u8 threecc[3];
+    u8 version;
+    u32 num_objects;
+} HEADER <bgcolor=cLtBlue>;
+
+typedef struct {
+    i32 x, y, z;
+} INT3;
+
+typedef struct {
+    f32 x, y, z;
+} FLOAT3;
+
+typedef struct {
+    f32 x, y, z, w;
+} FLOAT4;
+
+typedef struct {
+    u32 num_indices;
+    INT3 indices[num_indices];
+} FACE <optimize=false>;
+
+typedef struct {
+    string name;
+    string material;
+    u32 num_faces;
+    FACE faces[num_faces];
+} GROUP <optimize=false>;
+
+typedef struct {
+    string name;
+    u32 num_vertices;
+    u32 num_texcoords;
+    u32 num_normals;
+    u32 num_groups;
+    FLOAT4 vertices[num_vertices];
+    FLOAT3 texcoords[num_texcoords];
+    FLOAT3 normals[num_normals];
+    GROUP groups[num_groups];
+} OBJECT <optimize=false>;
+
+
+// ============================================================================
+// Data
+//
+HEADER header;
+local int i;
+for (i = 0; i < header.num_objects; ++i)
+    OBJECT object;
+

@@ -1,0 +1,33 @@
+; =============================================================================
+; FastBuild
+; =============================================================================
+#once
+
+ObjectList('res-textures-diffuse')
+{
+    .Compiler                   = .Crunch
+    .CompilerOptions            = .CrunchOptions
+                                + ' -fileformat dds'
+                                + ' -DXT1'
+
+    .CompilerOutputPath         = './_build/res/textures/diffuse'
+    .CompilerOutputExtension    = '.dxt1'
+
+    .CompilerInputPath          = './res/textures/diffuse'
+    .CompilerInputPattern       = '*.tga'
+}
+
+ObjectList('res-textures-normals')
+{
+    .Compiler                   = .Crunch
+    .CompilerOptions            = .CrunchOptions
+                                + ' -fileformat dds'
+                                + ' -DXT3'
+
+    .CompilerOutputPath         = './_build/res/textures/normals'
+    .CompilerOutputExtension    = '.dxt3'
+
+    .CompilerInputPath          = './res/textures/normals'
+    .CompilerInputPattern       = '*.tga'
+}
+

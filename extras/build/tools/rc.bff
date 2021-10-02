@@ -1,0 +1,27 @@
+; =============================================================================
+; Resource compiler
+; =============================================================================
+#once
+
+
+; =============================================================================
+; Resource Compiler Toolchain
+.RC                     = '$WindowsSDKBasePath$\bin\x64\rc.exe'
+.RCOptions              = ' /n /nologo'
+                        + ' /d VER_MAJOR=$VerMajor$'
+                        + ' /d VER_MINOR=$VerMinor$'
+                        + ' /d VER_PATCH=$VerPatch$'
+                        + ' /d VER_BUILD=$VerBuild$'
+                        + ' /i "$WindowsSDKBasePath$\Include\$WinSDKVersion$\shared"'
+                        + ' /i "$WindowsSDKBasePath$\Include\$WinSDKVersion$\um"'
+                        + ' /i "$VSBasePath$\include"'
+                        + ' /fo "%2" "%1"'
+
+
+; =============================================================================
+; Compiler Defintion
+Compiler('RC')
+{
+    .Executable = .RC
+}
+

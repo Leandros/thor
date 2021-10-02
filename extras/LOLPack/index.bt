@@ -1,0 +1,42 @@
+//------------------------------------------------
+//--- 010 Editor v7.0.2 Binary Template
+//
+//      File: index.bt
+//   Authors: Arvid Gerstmann
+//   Version: v1.0.0
+//   Purpose:
+//  Category: LOLPack
+// File Mask: *.idx
+//  ID Bytes: 49 44 58 // IDX
+//   History:
+//------------------------------------------------
+LittleEndian();
+typedef uchar   u8;
+typedef uint    u32;
+typedef uint64  u64;
+
+typedef struct {
+    u8 threecc[3];
+    u8 version;
+    u32 length <format=hex>;
+} HEADER <bgcolor=cLtBlue>;
+
+typedef struct {
+    u32 sizeu <format=hex>;
+    u32 sizec <format=hex>;
+    u32 offset <format=hex>;
+    u32 flags <format=hex>;
+    BigEndian();
+    u64 hash_name <format=hex>;
+    u64 hash_contents <format=hex>;
+    LittleEndian();
+} ENTRY;
+
+
+// ============================================================================
+// Data
+//
+HEADER header;
+while(!FEof())
+    ENTRY entry;
+

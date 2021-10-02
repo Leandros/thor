@@ -1,0 +1,124 @@
+; =============================================================================
+; MSVC 2015 x64
+; =============================================================================
+#once
+
+
+; =============================================================================
+; x64 compiler toolchain
+.Compiler           = '$VSBasePath$\bin\HostX64\x64\cl.exe'
+.CompilerOptions    = '"%1" /Fo"%2" /c'
+                    + ' /nologo'
+                    + ' /MP12 /FS /X'
+                    + ' /Wall /W3 /WX-'
+                    + ' /GS- /Gs0x7fffffff /Gv'
+                    + ' /analyze- /EHa- /GR- /GT /Zl /Gy /utf-8'
+                    + ' /DWIN32 /D_WIN32 /DWIN64 /D_WIN64 /D_WINDOWS'
+                    + ' /D_CRT_SECURE_NO_WARNINGS'
+                    + ' /D_USRDLL /DUNICODE /D_UNICODE /DCINTERFACE'
+                    + ' /Zc:wchar_t /Zc:forScope /Zc:inline /errorReport:prompt'
+                    + ' /volatile:iso /fp:except-'
+                    + ' /diagnostics:column'
+
+.Linker             = '$VSBasePath$\bin\HostX64\x64\link.exe'
+.LinkerOptions      = ' /OUT:"%2" "%1"'
+                    + ' /NOLOGO'
+                    + ' /CGTHREADS:8'
+                    + ' /STACK:0x100000,0x100000'
+                    + ' /ERRORREPORT:PROMPT'
+                    + ' /DYNAMICBASE:NO'
+                    + ' /FIXED:NO'
+                    + ' /NXCOMPAT'
+                    + ' /MANIFEST'
+                    + ' /TLBID:1'
+                    + ' /MACHINE:X64'
+                    + ' /NODEFAULTLIB'
+                    + ' /LARGEADDRESSAWARE'
+                    + ' /VERSION:$VerMajor$.$VerMinor$'
+
+.Librarian          = '$VSBasePath$\bin\HostX64\x64\lib.exe'
+.LibrarianOptions   = ' /OUT:"%2" "%1"'
+                    + ' /NOLOGO'
+                    + ' /MACHINE:X64'
+                    + ' /NODEFAULTLIB'
+                    + ' /ERRORREPORT:PROMPT'
+
+
+; =============================================================================
+; C Preprocessor
+.CompilerOptions    + ' /DBUILD_NAME=\"$BuildName$\"'
+                    + ' /DBUILD_REVISION=\"$BuildRevision$\"'
+                    + ' /DBUILD_VER_MAJOR="$VerMajor$"'
+                    + ' /DBUILD_VER_MINOR="$VerMinor$"'
+                    + ' /DBUILD_VER_PATCH="$VerPatch$"'
+                    + ' /DBUILD_VER_BUILD="$VerBuild$"'
+                    + ' /DBUILD_TYPE=\"$BuildType$\"'
+
+
+; =============================================================================
+; Debug Options
+.CompilerOptionsDebug           = ' /Od /Oi /Z7 /FC /Oy- /fp:precise'
+                                + ' /D__CRT_DEBUG__'
+                                + ' /D__CRT_RANGECHECK__'
+                                + ' /D__ENGINE_DEBUG__=1'
+.LinkerOptionsDebug             = ' /DEBUG'
+                                + ' /INCREMENTAL'
+                                + ' /PROFILE'
+
+; =============================================================================
+; DebugRelease Options
+.CompilerOptionsDebugRelease    = ' /O2 /Oi /Ob2 /Z7 /FC /Oy- /fp:fast'
+                                + ' /wd4710 /wd4711'
+                                + ' /D__CRT_DEBUG__'
+                                + ' /D__CRT_RANGECHECK__'
+                                + ' /D__ENGINE_DEBUG__=1'
+.LinkerOptionsDebugRelease      = ' /DEBUG'
+                                + ' /OPT:REF,ICF'
+                                + ' /INCREMENTAL:NO'
+                                + ' /PROFILE'
+
+; =============================================================================
+; Release Options
+.CompilerOptionsRelease         = ' /O2 /Oi /Ob2 /Z7 /GL /fp:fast'
+.LinkerOptionsRelease           = ' /OPT:REF,ICF'
+                                + ' /LTCG'
+                                + ' /INCREMENTAL:NO'
+                                + ' /RELEASE'
+
+; =============================================================================
+; Apply Options
+.CompilerOptions    + .'CompilerOptions$BuildType$'
+.LinkerOptions      + .'LinkerOptions$BuildType$'
+
+; =============================================================================
+; Include Paths
+.BaseIncludePaths   = ' /I"./src"'
+                    + ' /I"./src/engine"'
+                    + ' /I"./include"'
+                    + ' /I"./include/libc"'
+                    + ' /I"./include/engine"'
+                    + ' /I"./include/engine/ext"'
+                    + ' /I"./libs/include"'
+                    + ' /I"$VSBasePath$/include"'
+                    + ' /I"$WindowsSDKBasePath$/Include/$WinSDKVersion$/shared"'
+                    + ' /I"$WindowsSDKBasePath$/Include/$WinSDKVersion$/um"'
+.CompilerOptions    + .BaseIncludePaths
+
+
+; =============================================================================
+; Library Paths
+.LibPaths           = ' /LIBPATH:"$WindowsSDKBasePath$\Lib\$WinSDKVersion$\um\x64"'
+                    + ' /LIBPATH:"$DXSDK$\Lib\x64"'
+#if __WINDOWS__
+.LibPaths           + ' /LIBPATH:".\libs\lib\win64"'
+#endif
+
+.LinkerOptions      + .LibPaths
+
+; =============================================================================
+; Named compiler definition
+Compiler('MSVC')
+{
+    .Executable = .Compiler
+}
+

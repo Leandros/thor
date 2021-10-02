@@ -1,0 +1,35 @@
+; =============================================================================
+; OBJBin
+; =============================================================================
+
+ObjectList('objbin-exe')
+{
+    .CompilerOptions            + ' /D__ENGINE_STATIC__=+'
+                                + ' /D__BUILDING_DLL__=-'
+                                + .EngineConf
+
+    .CompilerOutputPath         = './_build/src/tools/objbin'
+    .CompilerOutputExtension    = '.o'
+
+    .CompilerInputPath          = './src/tools/objbin'
+    .CompilerInputPattern       = '*.c'
+}
+
+Executable('objbin')
+{
+    .LinkerOutput               = './_out/bin/objbin.exe'
+    .Libraries                  = { 'objbin-exe', 'engine' }
+    .LinkerOptions              + ' /SUBSYSTEM:WINDOWS'
+                                + ' /ENTRY:WinMain'
+                                + ' kernel32.lib'
+                                + ' User32.lib'
+                                + ' Dbghelp.lib'
+                                + ' Psapi.lib'
+                                + ' ws2_32.lib'
+                                + ' dxguid.lib'
+                                + '$LibLinkerFlags$'
+}
+
+
+
+

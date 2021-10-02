@@ -1,0 +1,25 @@
+; =============================================================================
+; Libraries
+; =============================================================================
+
+; Initial Flags
+.LibCompilerFlags   = ''
+.LibLinkerFlags     = ''
+
+
+; =============================================================================
+; CImGui
+.LibCompilerFlags   + ''
+.LibLinkerFlags     + ' cimgui.lib'
+
+
+; =============================================================================
+; Copy over required library files on each build
+Copy('cpy-libs')
+{
+    .Source         = {
+        './libs/lib/win64/cimgui.dll'
+    }
+    .Dest           = '_out/bin/'
+}
+

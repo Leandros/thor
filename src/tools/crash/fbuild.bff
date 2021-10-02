@@ -1,0 +1,42 @@
+; =============================================================================
+; Crash Reporter
+; =============================================================================
+
+ObjectList('crash-exe')
+{
+    .CompilerOptions            + ' /D__ENGINE_STATIC__=+'
+                                + ' /D__BUILDING_DLL__=-'
+                                + .EngineConf
+
+    .CompilerOutputPath         = './_build/src/tools/crash'
+    .CompilerOutputExtension    = '.o'
+
+    .CompilerInputPath          = './src/tools/crash/win32'
+    .CompilerInputPattern       = '*.c'
+}
+
+ObjectList('crash-res')
+{
+    .Compiler                   = .RC
+    .CompilerOptions            = .RCOptions
+
+    .CompilerOutputPath         = './_build/src/tools/crash'
+    .CompilerOutputExtension    = '.res'
+
+    .CompilerInputPath          = './src/tools/crash'
+    .CompilerInputPattern       = '*.rc'
+}
+
+Executable('crash')
+{
+    .LinkerOutput               = './_out/bin/$OutputCrashExe$.exe'
+    .Libraries                  = { 'crash-exe', 'crash-res', 'libc' }
+    .LinkerOptions              + ' /SUBSYSTEM:WINDOWS'
+                                + ' /ENTRY:WinMain'
+                                + ' kernel32.lib'
+                                + ' User32.lib'
+                                + ' Dbghelp.lib'
+                                + ' Psapi.lib'
+}
+
+

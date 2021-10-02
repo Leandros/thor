@@ -1,0 +1,40 @@
+//------------------------------------------------
+//--- 010 Editor v7.0.2 Binary Template
+//
+//      File: meta.bt
+//   Authors: Arvid Gerstmann
+//   Version: v1.0.0
+//   Purpose:
+//  Category: LOLPack
+// File Mask: *.xdi
+//  ID Bytes: 58 44 49 // XDI
+//   History:
+//------------------------------------------------
+LittleEndian();
+typedef uchar   u8;
+typedef uint16  u16;
+typedef uint    u32;
+typedef uint64  u64;
+
+typedef struct {
+    u8 threecc[3];
+    u8 version;
+    u32 length <format=hex>;
+} HEADER <bgcolor=cLtBlue>;
+
+typedef struct {
+    u16 file_index;
+    u16 location_index;
+    BigEndian();
+    u64 hash_name <format=hex>;
+    LittleEndian();
+} ENTRY;
+
+
+// ============================================================================
+// Data
+//
+HEADER header;
+while(!FEof())
+    ENTRY entry;
+

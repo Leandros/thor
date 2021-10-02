@@ -1,0 +1,93 @@
+; =============================================================================
+; FastBuild Visual Studio Solution
+; =============================================================================
+.ConfigRelease  = [
+    .Platform   = 'x64'
+    .Config     = 'Release'
+]
+.ConfigDebug    = [
+    .Platform   = 'x64'
+    .Config     = 'Debug'
+]
+
+
+; =============================================================================
+; libc Project
+; =============================================================================
+.ChangeToRoot   = 'cd ^$(SolutionDir)..'
+
+VCXProject('thor')
+{
+    .ProjectOutput          = './_vs/thor.vcxproj'
+    .ProjectConfigs         = { .ConfigDebug, .ConfigRelease }
+
+    .ProjectInputPaths      = {
+        './src/editor'
+        './src/libc'
+        './src/engine'
+        './src/game'
+        './src/server'
+        './src/tools/crash'
+        './src/tools/lolpack'
+        './src/tools/objbin'
+
+        './include/editor'
+        './include/libc'
+        './include/engine'
+        './include/game'
+        './include/server'
+    }
+    .ProjectBasePath        = './'
+    .ProjectAllowedFileExtensions = { '*.s', '*.c', '*.h' }
+
+    .ProjectBuildCommand    =
+        'cd ^$(SolutionDir)\..\ &amp; fbuild -ide -cache all'
+    .ProjectRebuildCommand  =
+        'cd ^$(SolutionDir)\..\ &amp; fbuild -ide -cache -clean all'
+    .ProjectCleanCommand    =
+        'cd ^$(SolutionDir)\..\ &amp; fbuild -ide -cache clean'
+
+    .Output                 = '^$(SolutionDir)../_out/bin/$OutputGameExe$.exe'
+    .OutputDirectory        = '^$(SolutionDir)../_out/bin/'
+    .IntermediateDirectory  = '^$(SolutionDir)vs'
+
+    ; This sucks ...
+    .PreprocessorDefinitions= 'COLOR_SUPPORT=+;
+                               ENGINE_ASSERTS=$Assert$;
+                               ENGINE_DEBUG=$GameDebug$;
+                               DLL_RELOAD=$DllReload$;
+                               __GAME_EXE__=\"$OutputGameExe$\";
+                               __GAME_DLL__=\"$OutputGameDll$\";
+                               __CRASH_EXE__=\"$OutputCrashExe$\";
+                               __BUILDING_DLL__=+;
+                               __ENGINE_STATIC__=+;'
+
+    .IncludeSearchPath      =
+        '^$(SolutionDir)..\include;
+         ^$(SolutionDir)..\include\libc;
+         ^$(SolutionDir)..\include\engine;
+         ^$(SolutionDir)..\src;
+         ^$(SolutionDir)..\src\libc;
+         ^$(SolutionDir)..\src\engine;
+         ^$(SolutionDir)..\libs\include;'
+
+    .LocalDebuggerCommand   = '^$(SolutionDir)../_out/bin/$OutputGameExe$.exe'
+    .LocalDebuggerWorkingDirectory = '^$(SolutionDir)../_out/bin'
+    .DebuggerFlavor         = 'WindowsLocalDebugger'
+    .PlatformToolset        = 'v141'
+}
+
+
+; =============================================================================
+; Visual Studio Solution
+; =============================================================================
+VSSolution('vs')
+{
+    .SolutionOutput         = './_vs/thor.sln'
+    .SolutionConfigs        = { .ConfigDebug, .ConfigRelease }
+    .SolutionProjects       = { 'thor' }
+    .SolutionBuildProject   = 'thor'
+
+    ; Grab that from our config file.
+    .SolutionVisualStudioVersion = '$VSVersion$'
+}

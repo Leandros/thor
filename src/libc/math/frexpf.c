@@ -1,0 +1,26 @@
+#include <libc/math.h>
+#include <libc/stdint.h>
+
+#define __1P64F 18446744073709551616.0f
+
+float
+frexpf(float x, int *e)
+{
+	union { float f; uint32_t i; } y = { x };
+	int ee = y.i >> 23 & 0xff;
+
+	if (!ee) {
+		if (x) {
+			x = frexpf(x * __1P64F, e);
+			*e -= 64;
+		} else *e = 0;
+		return x;
+	} else if (ee == 0xff) {
+		return x;
+	}
+
+	*e = ee - 0x7e;
+	y.i &= 0x807ffffful;
+	y.i |= 0x3f000000ul;
+	return y.f;
+}

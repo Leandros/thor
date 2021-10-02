@@ -1,0 +1,114 @@
+
+/* Error Checking / Defaults */
+#ifndef R
+#define R u16
+#endif
+
+#ifndef S
+#error "Struct S required"
+#endif
+
+#ifdef WITH_IMPL
+    #ifndef POOL
+    #error "POOL required"
+    #endif
+
+    #ifndef LOCK
+    #error "LOCK required"
+    #endif
+
+    #ifndef COUNT
+    #error "COUNT required"
+    #endif
+
+    #ifndef LENGTH
+    #error "LENGTH required"
+    #endif
+#endif /* WITH_IMPL */
+
+/* General Macros */
+#ifndef CONCAT
+#define CONCAT_(x, y) x ## y
+#define CONCAT(x, y) CONCAT_(x, y)
+#endif
+
+#define fname_register      CONCAT(register_, S)
+#define fname_unregister    CONCAT(unregister_, S)
+#define fname_lookup        CONCAT(lookup_, S)
+
+/* Declarations */
+R           fname_register(struct S **ptr);
+void        fname_unregister(R id);
+struct S *  fname_lookup(R id);
+
+/* ========================================================================= */
+/* CODE                                                                      */
+#ifdef WITH_IMPL
+R
+fname_register(struct S **ptr)
+{
+    R ret;
+    usize i;
+    struct gfx_resources *res = g_state->gfx_state->res;
+    dbg_assert(ptr != NULL, "output pointer is NULL");
+
+    ret = -1;
+    *ptr = NULL;
+
+    sys_spinlock_lock(&res->LOCK);
+    i = res->COUNT >= LENGTH ? 0 : res->COUNT;
+    for (; i < LENGTH; ++i) {
+        if (res->POOL[i].refcount == 0) {
+            res->POOL[i].refcount = 1;
+            *ptr = &(res->POOL[i]);
+            ret = (R)i;
+            break;
+        }
+    }
+    res->COUNT = (u16)ret + 1;
+    sys_spinlock_unlock(&res->LOCK);
+
+    dbg_assert(ID_VALID(ret), "no free resource slot");
+    return ret;
+}
+
+void
+fname_unregister(R id)
+{
+    struct gfx_resources *res = g_state->gfx_state->res;
+    dbg_assert(ID_VALID(id), "unregister id is invalid");
+
+    sys_spinlock_lock(&res->LOCK);
+    res->POOL[id].refcount = 0;
+    sys_spinlock_unlock(&res->LOCK);
+}
+
+struct S *
+fname_lookup(R id)
+{
+    struct gfx_resources *res = g_state->gfx_state->res;
+    dbg_assert(ID_VALID(id), "lookup id is invalid");
+    return &res->POOL[id];
+}
+#endif /* WITH_IMPL */
+/* END CODE                                                                  */
+/* ========================================================================= */
+
+
+/* Undefine all previously defined functions */
+#undef fname_register
+#undef fname_unregister
+#undef fname_lookup
+
+/* Undefine all input variables */
+#undef R
+#undef S
+
+#ifdef WITH_IMPL
+    #undef WITH_IMPL
+    #undef POOL
+    #undef LOCK
+    #undef COUNT
+    #undef LENGTH
+#endif /* WITH_IMPL */
+

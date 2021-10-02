@@ -1,0 +1,126 @@
+; =============================================================================
+; FastBuild
+; =============================================================================
+
+; Config (always first!)
+#include "extras/build/config.bff"
+
+; Compiler toolchain
+#include "extras/build/platforms/x64.bff"
+
+; Additional tools
+#include "extras/build/tools/crunch.bff"
+#include "extras/build/tools/fxc.bff"
+#include "extras/build/tools/leg.bff"
+#include "extras/build/tools/rc.bff"
+#include "extras/build/tools/yasm.bff"
+
+; Libraries
+#include "libs/fbuild.bff"
+
+; =============================================================================
+; Targets
+; Dependency graph: See extras/Build.md
+#include "src/libc/fbuild.bff"
+#include "src/engine/fbuild.bff"
+#include "src/tools/crash/fbuild.bff"
+#include "src/tools/lolpack/fbuild.bff"
+#include "src/tools/objbin/fbuild.bff"
+
+; Resources
+#include "res/models/fbuild.bff"
+#include "res/shader/fbuild.bff"
+#include "res/textures/fbuild.bff"
+#include "res/fbuild.bff"
+
+; Game
+#include "src/game/fbuild.bff"
+
+; Tests
+#include "tests/fbuild.bff"
+
+
+; =============================================================================
+; Generate Visual Studio Solution on Windows
+#if __WINDOWS__
+#include "vs.bff"
+#endif
+
+
+; =============================================================================
+; Convenience
+.CleanExec          = './extras/bin/win64/rmdir.bat'
+Exec('clean')
+{
+    .ExecExecutable = .CleanExec
+    .ExecInput      = './_build/non-existing-file'
+    .ExecOutput     = '$TMP$\clean.log'
+    .ExecUseStdOutAsOutput = true
+
+    .ExecArguments  = ' _build'
+                    + ' _out'
+}
+
+Exec('dist-clean')
+{
+    .ExecExecutable = .CleanExec
+    .ExecInput      = './_build/non-existing-file'
+    .ExecOutput     = '$TMP$\dist-clean.log'
+    .ExecUseStdOutAsOutput = true
+
+    .ExecArguments  = ' _install'
+                    + ' _build'
+                    + ' _out'
+                    + ' _vs'
+}
+
+
+; =============================================================================
+; Aliases
+Alias('tools')
+{
+    .Targets = {
+        'lolpack'
+        'objbin'
+    }
+}
+
+Alias('game')
+{
+    .Targets = {
+        'libc'
+        'engine'
+        'game-dll'
+        'game-exe'
+        'crash'
+    }
+}
+
+Alias('all')
+{
+    .Targets = {
+        'vs'
+        'res'
+        'game'
+        'tests'
+        'cpy-libs'
+    }
+}
+
+
+; =============================================================================
+; Install
+Exec('install')
+{
+    .ExecExecutable = './extras/build/install.bat'
+    .ExecInput      = './_build/non-existing-file'
+    .ExecOutput     = './_out/logs/install.log'
+    .ExecArguments  = '_out _install'
+    .ExecWorkingDir = '.'
+    .ExecUseStdOutAsOutput = true
+
+    .PreBuildDependencies = {
+        'all'
+    }
+}
+

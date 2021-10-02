@@ -1,0 +1,60 @@
+; =============================================================================
+; Shader
+; =============================================================================
+#once
+
+; We need to make sure 'Read Only' is not preserved, otherwise clean might fail
+.CopyExec       = 'C:\Windows\System32\xcopy.exe'
+.CopyOptions    = '/Q /Y /R /I "%1" "%2*"'
+
+ObjectList('res-rshader')
+{
+    .Compiler                   = .CopyExec
+    .CompilerOptions            = .CopyOptions
+
+    .CompilerOutputPath         = './_build/res/shader/d3d11'
+    .CompilerOutputExtension    = '.hlsl'
+
+    .CompilerInputPath          = './res/shader/d3d11'
+    .CompilerInputPattern       = '*.raw.hlsl'
+}
+
+ObjectList('res-fshader')
+{
+    .Compiler                   = .FXC
+    .CompilerOptions            = .FXCOptions
+                                + ' /T ps_5_0'
+
+    .CompilerOutputPath         = './_build/res/shader/d3d11'
+    .CompilerOutputExtension    = '.cso'
+
+    .CompilerInputPath          = './res/shader/d3d11'
+    .CompilerInputPattern       = '*.frag.hlsl'
+}
+
+ObjectList('res-vshader')
+{
+    .Compiler                   = .FXC
+    .CompilerOptions            = .FXCOptions
+                                + ' /T vs_5_0'
+
+    .CompilerOutputPath         = './_build/res/shader/d3d11'
+    .CompilerOutputExtension    = '.cso'
+
+    .CompilerInputPath          = './res/shader/d3d11'
+    .CompilerInputPattern       = '*.vert.hlsl'
+}
+
+ObjectList('res-cshader')
+{
+    .Compiler                   = .FXC
+    .CompilerOptions            = .FXCOptions
+                                + ' /T cs_5_0'
+
+    .CompilerOutputPath         = './_build/res/shader/d3d11'
+    .CompilerOutputExtension    = '.cso'
+
+    .CompilerInputPath          = './res/shader/d3d11'
+    .CompilerInputPattern       = '*.comp.hlsl'
+}
+
