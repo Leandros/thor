@@ -1,14 +1,10 @@
-# Real Engine <a href='http://5.9.149.113:8082/job/RealEngine/'><img src='http://5.9.149.113:8082/buildStatus/icon?job=RealEngine' align="right"></a>
+# Real Engine
 
 Welcome to the source code of the RealEngine, an engine written in C,
 with minimal dependencies.
 
 This repository contains everything you need for compiling the engine, and start
 tinkering with it. We're excited to see what you can create with it!
-
-Read the [documentation].
-
-If you need help, just ask, you can reach me at ag@arvid.io or at the [forums].
 
 
 # Getting started
@@ -111,9 +107,7 @@ with this program; if not, write to the Free Software Foundation, Inc.,
 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
 
-[documentation]:            https://arvid.io
-[forums]:                   https://arvid.io
-[CONTRIBUTING]:          https://github.com/Leandros/RealEngine/blob/master/CONTRIBUTING.md#
-[CHANGELOG on master]:   https://github.com/Leandros/RealEngine/blob/master/CHANGELOG.md#
-[CHANGELOG on stable]:   https://github.com/Leandros/RealEngine/blob/stable/CHANGELOG.md#
-[CHANGELOG on release]:  https://github.com/Leandros/RealEngine/blob/release/CHANGELOG.md#
+[CONTRIBUTING]:          https://github.com/Leandros/thor/blob/master/CONTRIBUTING.md#
+[CHANGELOG on master]:   https://github.com/Leandros/thor/blob/master/CHANGELOG.md#
+[CHANGELOG on stable]:   https://github.com/Leandros/thor/blob/stable/CHANGELOG.md#
+[CHANGELOG on release]:  https://github.com/Leandros/thor/blob/release/CHANGELOG.md#
